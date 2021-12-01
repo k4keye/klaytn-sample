@@ -20,4 +20,8 @@ RUN yum -y install kernel-devel kernel-headers
 #COPY addition-game-starter/package.json /home
 #COPY addition-game-starter/package-lock.json /home
 
-# todo : 컨테이너 실행후 불륨연결된 디렉토리에서 npm install 해야한다.
+# todo 
+# 컨테이너 실행후 불륨연결된 디렉토리에서 npm install 해야한다.
+# 배포 truffle deploy --network klaytn
+# 재배포 truffle deploy --compile-all --reset --network klaytn
+# 웹 배포 npm run dev
