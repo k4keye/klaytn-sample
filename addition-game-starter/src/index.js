@@ -39,7 +39,15 @@ const App = {
   },
 
   handleLogin: async function () {
-
+    if(this.auth.accessType === 'keystore'){
+      try{
+        //keystore , password 를 통해 private key 를 얻는다. 에러가 난다면 로그인 실패
+        const privateKey = cav.klay.accounts.decrypt(this.auth.keystore, this.auth.password).privateKey;
+        this.integrateWallet(privateKey)
+      }catch (e){
+        $('#message').text('비밀번호가 일치하지 않습니다.'+e);
+      }
+    }
   },
 
   handleLogout: async function () {
@@ -79,7 +87,13 @@ const App = {
   },
 
   integrateWallet: function (privateKey) {
+    const walletInstance = cav.klay.accounts.privateKeyToAccount(privateKey);
+    cav.klay.accounts.wallet.add(walletInstance);
 
+    //세션 저장
+    sessionStorage.setItem('walletInstance', JSON.stringify(walletInstance));
+    this.changeUI(walletInstance)
+    
   },
 
   reset: function () {
@@ -87,7 +101,10 @@ const App = {
   },
 
   changeUI: async function (walletInstance) {
-
+    $('#loginModal').modal('hide')
+    $('#login').hide();
+    $('#logout').show();
+    $('#address').append('<br>'+'<p>' +'내 계정 주소: '+walletInstance.address +'</p>');
   },
 
   removeWallet: function () {
